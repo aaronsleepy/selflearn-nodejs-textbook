@@ -22,3 +22,11 @@ $ npm i --global {package-name}
 
 $ npm i -g {package-name}
 ```
+
+## npm SemVer 기호
+| 기호  | 설명  | 예시  | 예시 설명  | 예시 동치(대체로)  |
+| --- | ---   | ---  | ------  | -------  |
+| @^  | minor 버전까지  | express@^1.1.1  | 1.1.1 <= SemVer < 2.0.0  | 1.x.x  |
+| @~  | patch 버전까지  | express@~1.1.1  | 1.1.1 <= SemVer < 1.2.0  | 1.1.x  |
+| @latest  | 최산 안정화 버전  | express@latest  | -  | @x  |
+
