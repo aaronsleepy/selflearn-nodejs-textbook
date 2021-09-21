@@ -30,3 +30,24 @@ $ npm i -g {package-name}
 | @~  | patch 버전까지  | express@~1.1.1  | 1.1.1 <= SemVer < 1.2.0  | 1.1.x  |
 | @latest  | 최산 안정화 버전  | express@latest  | -  | @x  |
 
+
+## Middleware Pattern
+미들웨어 안에 미들웨어
+```javascript
+app.use(morgan('dev'));
+
+app.use((req, res, next) => {
+  morgan('dev')(req, res, next);
+});
+```
+
+### 조건문에 따라 다른 미들웨어 적용
+```javascript
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production') {
+    morgan('combined')(req, res, next);
+  } else {
+    morgan('dev')(req, res, next);
+  }
+});
+```
