@@ -7,10 +7,13 @@ const dotenv = require('dotenv');
 const multer = require('multer');
 const fs = require('fs');
 
-const app = express();
-app.set('port', process.env.PORT || 3000);
 
 dotenv.config({ path: 'ch6/.env' });
+const indexRouter = require('./routes/index');
+const userRouter = require('./routes/user');
+
+const app = express();
+app.set('port', process.env.PORT || 3000);
 
 app.use(morgan('dev'));
 app.use('/', express.static(path.join(__dirname, 'static')));
@@ -51,10 +54,13 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-app.use((req, res, next) => {
-  console.log('모든 요청에 다 실행됩니다');
-  next();
-});
+app.use('/', indexRouter);
+app.use('/user', userRouter);
+
+// app.use((req, res, next) => {
+//   console.log('모든 요청에 다 실행됩니다');
+//   next();
+// });
 
 app.get('/upload', (req, res) => {
   res.sendFile(path.join(__dirname, '/static/html', 'multipart.html'));
@@ -68,11 +74,15 @@ app.post('/upload',
   },
 );
 
-app.get('/', (req, res, next) => {
-  console.log('GET / 요청에만 실행됩니다');
-  next();
-}, (req, res, next) => {
-  throw new Error('에러는 에러 처리 미들웨어로 갑니다');
+// app.get('/', (req, res, next) => {
+//   console.log('GET / 요청에만 실행됩니다');
+//   next();
+// }, (req, res, next) => {
+//   throw new Error('에러는 에러 처리 미들웨어로 갑니다');
+// });
+
+app.use((req, res, next) => {
+  res.status(404).send('Not Found');
 });
 
 app.use((err, req, res, next) => {
@@ -80,10 +90,10 @@ app.use((err, req, res, next) => {
   res.status(500).send(err.message);
 });
 
-app.get('/', (req, res) => {
-  // res.send('Hello, Express!');
-  res.sendFile(path.join(__dirname, '/static/html', '/index.html'));
-});
+// app.get('/', (req, res) => {
+//   // res.send('Hello, Express!');
+//   res.sendFile(path.join(__dirname, '/static/html', '/index.html'));
+// });
 
 app.listen(app.get('port'), () => {
   console.log(`Listening on port ${app.get('port')}`);
